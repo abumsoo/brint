@@ -20,10 +20,13 @@ def main():
         while True:
             print_menu()
             choice = input("What would you like to do? ")
-            if choice == 'r':
+            choice = choice.lower()
+            if choice == 'e':
                 spent(conn)
-            elif choice == 'v':
+            elif choice == 'o':
                 overview(conn)
+            elif choice == 'ba':
+                balance(conn)
             elif choice == 'q':
                 return False
 
@@ -41,17 +44,18 @@ def print_menu():
     # TODO: Option to delete entries
     # TODO: Option to modify entries
     print()
-    print("r) Record spending")
-    print("v) View spending")
-    print("b) Set budget")
-    print("q) Quit")
+    print("make an [E]ntry")
+    print("[O]verview of spending")
+    print("set a [B]udget")
+    print("check [BA]lance")
+    print("[Q]uit")
     print()
 
 def spent(conn):
 
     # TODO: Figure out expenditure and income (-/+)
 
-    amount = input("Amount: ")
+    amount = input("Amount([-]/+): ")
     description = input("Description: ")
 
     # display existing categories
@@ -59,7 +63,10 @@ def spent(conn):
     category = input("Category: ")
 
     # put into database
-    entry(conn, (category, description, float(amount)))
+    amount = float(amount)
+    if '+' not in amount:
+        amount = amount * -1
+    entry(conn, (category, description, amount))
 
     # TODO: Check against budget for specified category
     budget_check(conn)
@@ -90,6 +97,16 @@ def capital(conn):
     # Insert as a regular entry under capital category 
     query = "INSERT INTO"
     pass
+
+def balance(conn):
+    """ returns the balance of the account """
+    cur = conn.cursor()
+    query = "SELECT SUM(amount) FROM finances"
+    cur.execute(query)
+    bal = cur.fetchall()[0][0]
+    bal = "{:.2f}".format(bal)
+    print()
+    print("Balance:", bal)
 
 def budget():
     # TODO: Set monthly threshold warning?
