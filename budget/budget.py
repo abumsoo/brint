@@ -53,7 +53,6 @@ def print_menu():
 
 def spent(conn):
 
-    # TODO: Figure out expenditure and income (-/+)
 
     amount = input("Amount([-]/+): ")
     description = input("Description: ")
@@ -62,10 +61,12 @@ def spent(conn):
     unique_query(conn, 'category')
     category = input("Category: ")
 
-    # put into database
-    amount = float(amount)
+    # Figure out expenditure and income (-/+)
     if '+' not in amount:
         amount = amount * -1
+    amount = float(amount)
+
+    # put into database
     entry(conn, (category, description, amount))
 
     # TODO: Check against budget for specified category
