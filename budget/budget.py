@@ -4,13 +4,11 @@ import sqlite3
 import readline
 
 # User interface to take in data
-## DONE Print out options
-## DONE Interactive prompts
-### DONE Ask if they want to record spending
-### DONE Ask what category
-# DONE Method to create a category
 # 1/2 method to enter spending
 # Method to limit spending in certain categories 'Set budgets'
+
+# Might be better to split the db into 2 tables
+### 1 for income 1 for expenditure
 
 # Infinite loop until user says quit
 def main():
@@ -43,6 +41,7 @@ def print_menu():
     # TODO: Option to clear the database
     # TODO: Option to delete entries
     # TODO: Option to modify entries
+    ### SUBTODO: Need a way to organize id so user can pick id to modify
     print()
     print("make an [E]ntry")
     print("[O]verview of spending")
@@ -95,7 +94,7 @@ def entry(conn, col_vals):
 
 def capital(conn):
     # set initial capital
-    # Insert as a regular entry under capital category 
+    # Insert as a regular entry under capital category
     query = "INSERT INTO"
     pass
 
@@ -129,7 +128,7 @@ def overview(conn):
     print()
 
 
-    rows = query(conn, ('date','category','description','amount'))
+    rows = query(conn, ('id','date','category','description','amount'))
 
     cat_longest = longest_string_len(conn, 'category')
     desc_longest = longest_string_len(conn, 'description')
