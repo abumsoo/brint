@@ -122,6 +122,7 @@ def overview(conn):
     header += 'Category' + ' ' * (cat_longest - 6) + 'Description'
     padding = 80 - len(header) - len('Entry')
     header += ' ' * padding + 'Entry'
+    # TODO: If there's no data, formatting is fucked
     print(header)
     print('-' * 80)
 
@@ -137,11 +138,17 @@ def overview(conn):
         line_out += ' ' * padding + amount
         print(line_out)
 
+def header(conn):
+    cur = conn.cursor()
+    
+
 def longest_string_len(conn, column):
     cur = conn.cursor()
     query = """SELECT {0} FROM finances
     ORDER BY LENGTH({0}) DESC LIMIT 1""".format(column)
     cur.execute(query)
+    if not cur.fetchall():
+        return 0
     longest_string = cur.fetchall()[0][0]
     return len(str(longest_string))
 
