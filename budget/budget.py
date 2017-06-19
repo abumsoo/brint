@@ -4,13 +4,11 @@ import sqlite3
 import readline
 
 # User interface to take in data
-## DONE Print out options
-## DONE Interactive prompts
-### DONE Ask if they want to record spending
-### DONE Ask what category
-# DONE Method to create a category
 # 1/2 method to enter spending
 # Method to limit spending in certain categories 'Set budgets'
+
+# Might be better to split the db into 2 tables
+### 1 for income 1 for expenditure
 
 # Infinite loop until user says quit
 def main():
@@ -20,10 +18,13 @@ def main():
         while True:
             print_menu()
             choice = input("What would you like to do? ")
-            if choice == 'r':
+            choice = choice.lower()
+            if choice == 'e':
                 spent(conn)
-            elif choice == 'v':
+            elif choice == 'o':
                 overview(conn)
+            elif choice == 'ba':
+                balance(conn)
             elif choice == 'q':
                 return False
 
@@ -40,26 +41,32 @@ def print_menu():
     # TODO: Option to clear the database
     # TODO: Option to delete entries
     # TODO: Option to modify entries
+    ### SUBTODO: Need a way to organize id so user can pick id to modify
     print()
-    print("r) Record spending")
-    print("v) View spending")
-    print("b) Set budget")
-    print("q) Quit")
+    print("make an [E]ntry")
+    print("[O]verview of spending")
+    print("set a [B]udget")
+    print("check [BA]lance")
+    print("[Q]uit")
     print()
 
 def spent(conn):
 
-    # TODO: Figure out expenditure and income (-/+)
 
-    amount = input("Amount: ")
+    amount = input("Amount([-]/+): ")
     description = input("Description: ")
 
     # display existing categories
     unique_query(conn, 'category')
     category = input("Category: ")
 
+    # Figure out expenditure and income (-/+)
+    if '+' not in amount:
+        amount = amount * -1
+    amount = float(amount)
+
     # put into database
-    entry(conn, (category, description, float(amount)))
+    entry(conn, (category, description, amount))
 
     # TODO: Check against budget for specified category
     budget_check(conn)
@@ -87,9 +94,19 @@ def entry(conn, col_vals):
 
 def capital(conn):
     # set initial capital
-    # Insert as a regular entry under capital category 
+    # Insert as a regular entry under capital category
     query = "INSERT INTO"
     pass
+
+def balance(conn):
+    """ returns the balance of the account """
+    cur = conn.cursor()
+    query = "SELECT SUM(amount) FROM finances"
+    cur.execute(query)
+    bal = cur.fetchall()[0][0]
+    bal = "{:.2f}".format(bal)
+    print()
+    print("Balance:", bal)
 
 def budget():
     # TODO: Set monthly threshold warning?
@@ -111,7 +128,7 @@ def overview(conn):
     print()
 
 
-    rows = query(conn, ('date','category','description','amount'))
+    rows = query(conn, ('id','date','category','description','amount'))
 
     cat_longest = longest_string_len(conn, 'category')
     desc_longest = longest_string_len(conn, 'description')
