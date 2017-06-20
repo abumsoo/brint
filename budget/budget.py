@@ -61,8 +61,8 @@ def spent(conn):
     category = input("Category: ")
 
     # Figure out expenditure and income (-/+)
-    if '+' not in amount:
-        amount = amount * -1
+    if '-' not in amount and '+' not in amount:
+        amount = '-' + amount
     amount = float(amount)
 
     # put into database
@@ -156,8 +156,7 @@ def overview(conn):
         print(line_out)
 
 def header(conn):
-    cur = conn.cursor()
-    
+    query()
 
 def longest_string_len(conn, column):
     cur = conn.cursor()
@@ -166,6 +165,7 @@ def longest_string_len(conn, column):
     cur.execute(query)
     if not cur.fetchall():
         return 0
+    print(cur.fetchall())
     longest_string = cur.fetchall()[0][0]
     return len(str(longest_string))
 
