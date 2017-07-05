@@ -31,8 +31,8 @@ def main():
 def mk_table(conn):
     # Create table in database if it doesn't exist
     cur = conn.cursor()
-    query = """CREATE TABLE IF NOT EXISTS finances
-    (Id INTEGER PRIMARY KEY, Date TEXT, Category TEXT, Description TEXT, Amount REAL)"""
+    query = '''CREATE TABLE IF NOT EXISTS finances
+    (Id INTEGER PRIMARY KEY, Date TEXT, Category TEXT, Description TEXT, Amount REAL)'''
     cur.execute(query)
     conn.commit
 
@@ -160,8 +160,8 @@ def header(conn):
 
 def longest_string_len(conn, column):
     cur = conn.cursor()
-    query = """SELECT {0} FROM finances
-    ORDER BY LENGTH({0}) DESC LIMIT 1""".format(column)
+    query = '''SELECT {0} FROM finances
+    ORDER BY LENGTH({0}) DESC LIMIT 1'''.format(column)
     cur.execute(query)
     if not cur.fetchall():
         return 0
