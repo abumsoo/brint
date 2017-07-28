@@ -1,3 +1,5 @@
+# Turn all expenses and income into daily terms
+# in order to get a daily budget
 allowance = 1000.00 / 30
 wage = 12.00
 hours_fortnight = 20
@@ -22,6 +24,8 @@ saving = (revenue - tax) * save_rate
 fortnight_income = revenue - tax - saving
 daily_income = fortnight_income / 14
 
-puts allowance + daily_income - expenses.values.sum
+profit = allowance + daily_income - expenses.values.sum
+puts "Daily Revenue: #{(allowance + daily_income).round(2)}"
+puts "Leftover: #{profit.round(2)}"
 
 puts daily_income.round(3)
